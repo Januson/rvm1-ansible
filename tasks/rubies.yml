@@ -1,5 +1,4 @@
 ---
-
 - name: Detect rubies
   command: '{{ rvm1_rvm }} list strings'
   register: rvm_list_strings
@@ -16,8 +15,11 @@
 
 - name: Select default ruby
   command: '{{ rvm1_rvm }} alias create default {{ rvm1_default_ruby_version }}'
-  when: detect_default_ruby_version.stdout|default() == '' or
-        rvm1_default_ruby_version not in detect_default_ruby_version.stdout
+  when:
+  - rvm1_rubies|length > 0
+  - detect_default_ruby_version.stdout|default() == '' or
+    rvm1_default_ruby_version not in detect_default_ruby_version.stdout
+
 
 - name: Detect installed ruby patch number
   shell: >
