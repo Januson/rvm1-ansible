@@ -8,6 +8,14 @@
 - name: Install rubies
   command: '{{ rvm1_rvm }} install {{ item }} {{ rvm1_ruby_install_flags }}'
   loop: '{{ rvm1_rubies | difference(rvm_list_strings.stdout_lines) }}'
+  when:
+    - rvm1_pkgs|length > 0
+
+- name: Install rubies
+  command: '{{ rvm1_rvm }} install {{ item }} {{ rvm1_ruby_install_flags }} --with-openssl-dir={{ rvm_install_path }}/usr'
+  loop: '{{ rvm1_rubies | difference(rvm_list_strings.stdout_lines) }}'
+  when:
+    - rvm1_pkgs|length == 0
 
 - name: Detect default ruby version
   command: '{{ rvm1_rvm }} alias list default'
